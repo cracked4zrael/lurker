@@ -4,7 +4,7 @@
 #include "gyat.h"
 #include <unistd.h>
 
-typedef INT(WINAPI *PWSAStartup) (
+typedef INT(WINAPI * PWSAStartup) (
   WORD,
   LPWSADATA
 );
