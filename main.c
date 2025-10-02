@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include <windows.h>
-#include "gyat.h"
 #include <unistd.h>
+#include "gyat.h"
 
 typedef INT(WINAPI * PWSAStartup) (
   WORD,
