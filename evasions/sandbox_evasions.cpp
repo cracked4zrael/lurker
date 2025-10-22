@@ -1,41 +1,37 @@
-#include "gyat.h"
-#include <stdio.h>
+#include "../includes/evasion.h"
+#include <iostream>
 #include <windows.h>
 
-int busy_sleep() {
-  int azd = 0;
-  int zzz = 0;
-
-  while (azd < 65 && zzz < 65) {
-    azd++;
-    zzz++;
-    printf("Hey sexy\n");
+int busySleep() {
+  for (int a { 0 }, b { 0 }, c { 0 }; a <= 60; a++) {
+    b++;
+    c++;
   }
 }
 
-int check_cpu_count() {
-  SYSTEM_INFO sysinfo;
-  GetSystemInfo(&sysinfo);
+int cpuCount() {
+  SYSTEM_INFO systemInfo;
+  GetSystemInfo( &systemInfo );
 
-  DWORD cpu_count = sysinfo.dwNumberOfProcessors;
+  DWORD cpuCount = systemInfo.dwNumberOfProcessors;
 
-  if (cpu_count < 2) {
-    exit(EXIT_SUCCESS);
+  if (cpuCount < 2) {
+    std::exit(EXIT_SUCCESS);
   }
 }
 
-int check_ram_size() {
-  MEMORYSTATUSEX memory_info;
-  memory_info.dwLength = sizeof(memory_info);
-  GlobalMemoryStatusEx(&memory_info);
-  DWORD ram_size = memory_info.ullTotalPhys / 1024 / 1024;
+int ramSize() {
+  MEMORYSTATUSEX memoryInfo;
+  memoryInfo.dwLength = sizeof( memoryInfo );
+  GlobalMemoryStatusEx( &memoryInfo );
+  DWORD ram_size = memoryInfo.ullTotalPhys / 1024 / 1024;
 
   if (ram_size < 8192) {
-    exit(EXIT_SUCCESS);
+    std::exit(EXIT_SUCCESS);
   }
 }
 
-int check_hdd_size() {
+int hddSize() {
   HANDLE        device_handle = 
     CreateFileW(
     L"\\\\.\\Physicaldrive0", 
@@ -51,7 +47,7 @@ int check_hdd_size() {
   DWORD         bytes_returned;
 
   if (device_handle == INVALID_HANDLE_VALUE) {
-    printf("Error G1: %lu\n", GetLastError());
+    std::cout << "Error G1" << GetLastError() << '\n';
   }
 
   if (!DeviceIoControl(
@@ -66,44 +62,45 @@ int check_hdd_size() {
   ))
 
   {
-    printf("Error G2: %lu\n", GetLastError());
+    std::cout << "Error G2" << GetLastError() << '\n';
   }
 
   DWORD disk_size = disk_geometry.Cylinders.QuadPart * (ULONG)disk_geometry.TracksPerCylinder * (ULONG)disk_geometry.SectorsPerTrack * (ULONG)disk_geometry.BytesPerSector / 1024 / 1024 / 1024;
 
   if (disk_size < 180) {
-    exit(EXIT_SUCCESS);
+    std::exit(EXIT_SUCCESS);
   }
 }
 
-int check_computer_name() {
+int computerName() {
   DWORD  computer_name_length = MAX_COMPUTERNAME_LENGTH + 1;
   wchar_t computername[MAX_COMPUTERNAME_LENGTH + 1];
   
   if (!GetComputerNameW(computername, &computer_name_length)) {
-    printf("Error G3: %lu\n", GetLastError());
+    std::cout << "Error G3" << GetLastError() << '\n';
+
   }
 
   CharUpperW(computername);
 
   if (wcsstr(computername, L"DESKTOP-")) {
-    exit(EXIT_SUCCESS);
+    std::exit(EXIT_SUCCESS);
   }
 
   return EXIT_SUCCESS;
 }
 
-int check_username() {
+int username() {
   DWORD   username_length = 256;
   wchar_t username[username_length + 1];
 
   if (!GetUserNameW(username, &username_length)) {
-    printf("Error G4: %lu\n", GetLastError());
+    std::cout << "Error G4" << GetLastError() << '\n';
   }
 
   CharUpperW(username);
 
   if (wcsstr(username, L"ADMIN")) {
-    exit(EXIT_SUCCESS);
+    std::exit(EXIT_SUCCESS);
   }
 }
