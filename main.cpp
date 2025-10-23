@@ -90,7 +90,7 @@ int main() {
       NULL,
       NULL,
       NULL
-    ) == 0)
+    ) != SOCKET_ERROR)
 
   {
     std::cout << "Error M3:" << WSAGetLastError() << '\n';
