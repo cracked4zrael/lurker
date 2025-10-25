@@ -23,4 +23,7 @@ target_link_libraries(lurker
 )
 
 # You may use this flag to prevent console window
-# set_target_properties(main PROPERTIES WIN32_EXECUTABLE TRUE)
+set_target_properties(lurker PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    LINK_FLAGS "-mwindows"
+)
